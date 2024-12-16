@@ -1,4 +1,4 @@
-import { CallLater } from "./CallLater";
+import { CallLater, LaterHandler } from "./CallLater";
 import { Utils } from "./Utils";
 
 /**
@@ -188,8 +188,8 @@ export class Timer {
      * @param	args	回调参数。
      * @param	coverBefore	是否覆盖之前的延迟执行，默认为 true 。
      */
-    once(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): void {
-        this._create(false, false, delay, caller, method, args, coverBefore);
+    once(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): TimerHandler {
+        return this._create(false, false, delay, caller, method, args, coverBefore);
     }
 
     /**
@@ -201,9 +201,10 @@ export class Timer {
      * @param	coverBefore	是否覆盖之前的延迟执行，默认为 true 。
      * @param	jumpFrame 时钟是否跳帧。基于时间的循环回调，单位时间间隔内，如能执行多次回调，出于性能考虑，引擎默认只执行一次，设置jumpFrame=true后，则回调会连续执行多次
      */
-    loop(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true, jumpFrame: boolean = false): void {
+    loop(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true, jumpFrame: boolean = false): TimerHandler {
         var handler: TimerHandler = this._create(false, true, delay, caller, method, args, coverBefore);
         if (handler) handler.jumpFrame = jumpFrame;
+        return handler;
     }
 
     /**
@@ -214,8 +215,8 @@ export class Timer {
      * @param	args	回调参数。
      * @param	coverBefore	是否覆盖之前的延迟执行，默认为 true 。
      */
-    frameOnce(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): void {
-        this._create(true, false, delay, caller, method, args, coverBefore);
+    frameOnce(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): TimerHandler {
+        return this._create(true, false, delay, caller, method, args, coverBefore);
     }
 
     /**
@@ -226,8 +227,8 @@ export class Timer {
      * @param	args	回调参数。
      * @param	coverBefore	是否覆盖之前的延迟执行，默认为 true 。
      */
-    frameLoop(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): void {
-        this._create(true, true, delay, caller, method, args, coverBefore);
+    frameLoop(delay: number, caller: any, method: Function, args: any[] = null, coverBefore: boolean = true): TimerHandler {
+        return this._create(true, true, delay, caller, method, args, coverBefore);
     }
 
     /** 返回统计信息。*/
@@ -275,8 +276,8 @@ export class Timer {
      * @param	method 定时器回调函数。
      * @param	args 回调参数。
      */
-    callLater(caller: any, method: Function, args: any[] = null): void {
-        CallLater.I.callLater(caller, method, args);
+    callLater(caller: any, method: Function, args: any[] = null): LaterHandler {
+        return CallLater.I.callLater(caller, method, args);
     }
 
     /**
@@ -338,7 +339,6 @@ export class Timer {
 
 
 
-/** @private */
 class TimerHandler {
     key: string;
     repeat: boolean;

@@ -140,7 +140,20 @@ export class Image extends UIComponent {
         this._setSkin(value);
     }
 
-    _setSkin(url: string): Promise<void> {
+    /**
+     * 设置皮肤资源，当资源为 nil 时，不会覆盖原来正确的皮肤
+     * @param value 
+     * @returns 
+     */
+    setSkinWhenNotnil(value: string) {
+        if (value == "")
+            value = null;
+        if (this._skin == value)
+            return;
+        this._setSkin(value, true);
+    }
+
+    _setSkin(url: string, checkNotnil: boolean = false): Promise<void> {
         this._skin = url;
         if (url) {
             if (this._skinBaseUrl)
@@ -153,8 +166,15 @@ export class Image extends UIComponent {
             else {
                 let sk = this._skin;
                 return ILaya.loader.load(url, { type: Loader.IMAGE, group: this._group }).then(tex => {
-                    if (sk == this._skin)
-                        this.source = tex;
+                    if (sk == this._skin) {
+                        if (checkNotnil) {
+                            if (tex) {
+                                this.source = tex;
+                            }
+                        } else {
+                            this.source = tex;
+                        }
+                    } 
                 });
             }
         }

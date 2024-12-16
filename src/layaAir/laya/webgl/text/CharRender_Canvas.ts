@@ -67,7 +67,12 @@ export class CharRender_Canvas extends ICharRender {
 			this.ctx._lastFont = font;
 			//console.log('use font ' + font);
 		}
-		return this.ctx.measureText(str).width;
+		let tmp = this.ctx.measureText(str);
+		if (!tmp) {
+			console.log("getWidth fail ", str);
+			return 0;
+		}
+		return tmp.width;
 	}
 
 	/**

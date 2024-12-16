@@ -138,4 +138,25 @@ export class ShaderCompileDefineBase {
 
         return shader;
     }
+
+    clearBase(arr: any) {
+        if (!arr._disposeResource) {
+            for (var key in arr) {
+                var shader = arr[key]
+                if (shader._disposeResource) {
+                    shader._disposeResource()
+                } else
+                    this.clearBase(shader)
+            }
+        } else {
+            arr._disposeResource()
+            arr = null
+        }
+    }
+
+    clear() {
+        this.clearBase(this._cacheSharders)
+        this._cacheShaderHierarchy = 1;
+        this._cacheSharders = {};
+    }
 }

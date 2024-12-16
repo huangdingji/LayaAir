@@ -2,6 +2,7 @@ import { LayaGL } from "../../layagl/LayaGL";
 import { ShaderCompile } from "../../webgl/utils/ShaderCompile";
 import { DefineDatas } from "./DefineDatas";
 import { ShaderDefine } from "./ShaderDefine";
+import { ShaderInstance } from "./ShaderInstance";
 import { ShaderPass } from "./ShaderPass";
 import { ShaderVariant, ShaderVariantCollection } from "./ShaderVariantCollection";
 import { SubShader } from "./SubShader";
@@ -195,19 +196,19 @@ export class Shader3D {
      * @param   passIndex  通道索引。
      * @param	defineNames 宏定义名字集合。
      */
-    static compileShaderByDefineNames(shaderName: string, subShaderIndex: number, passIndex: number, defineNames: string[], nodeCommonMap: string[]): void {
+    static compileShaderByDefineNames(shaderName: string, subShaderIndex: number, passIndex: number, defineNames: string[], nodeCommonMap: string[]): ShaderInstance {
         var shader: Shader3D = Shader3D.find(shaderName);
         if (shader) {
             var subShader: SubShader = shader.getSubShaderAt(subShaderIndex);
             if (subShader) {
                 var pass: ShaderPass = subShader._passes[passIndex];
-                pass.nodeCommonMap = nodeCommonMap;
+                pass.nodeCommonMap = nodeCommonMap || [];
                 if (pass) {
                     var compileDefineDatas: DefineDatas = Shader3D._compileDefineDatas;
                     Shader3D._configDefineValues.cloneTo(compileDefineDatas);
                     for (var i: number = 0, n: number = defineNames.length; i < n; i++)
                         compileDefineDatas.add(Shader3D.getDefineByName(defineNames[i]));
-                    pass.withCompile(compileDefineDatas);
+                    return pass.withCompile(compileDefineDatas);
                 } else {
                     console.warn("Shader3D: unknown passIndex.");
                 }
@@ -217,6 +218,7 @@ export class Shader3D {
         } else {
             console.warn("Shader3D: unknown shader name.");
         }
+        return null;
     }
 
     /**
@@ -264,6 +266,20 @@ export class Shader3D {
             ShaderCompile.getRenderState(passData.renderState, shaderPass.renderState);
         }
         return shader;
+    }
+
+    static clear() {
+        for (const key in this._preCompileShader) {
+            if (Object.prototype.hasOwnProperty.call(this._preCompileShader, key)) {
+                const element = this._preCompileShader[key];
+                for (let i = 0; i < element._subShaders.length; i++) {
+                    let passList = element._subShaders[i]._passes;
+                    for (let j = 0; j < passList.length; j++) {
+                        passList[j].clear();
+                    }
+                }
+            }
+        }
     }
 
     /**@internal */

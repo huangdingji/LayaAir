@@ -56,6 +56,7 @@ export class Node extends EventDispatcher {
     _is3D: boolean;
     _url: string;
     _extra: INodeExtra;
+    _clickFunc?: Function
 
     /**节点名称。*/
     name: string = "";
@@ -75,6 +76,14 @@ export class Node extends EventDispatcher {
      */
     set url(path: string) {
         this._url = path;
+    }
+
+    get clickFunc(): Function {
+        return this._clickFunc;
+    }
+
+    set clickFunc(func: Function) {
+        this._clickFunc = func;
     }
 
     get hideFlags(): number {
@@ -195,6 +204,7 @@ export class Node extends EventDispatcher {
 
         //移除所有事件监听
         this.offAll();
+        this.clickFunc = null;
     }
 
     /**

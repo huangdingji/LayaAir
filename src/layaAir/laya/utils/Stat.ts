@@ -200,6 +200,9 @@ export class Stat {
     /**@internal */
     private static _show: boolean;
 
+    public static CloseReceiveShadow: boolean = false // 关闭接收阴影 
+    public static CloseCastShadow: boolean = false // 关闭产生阴影
+
     /**
      * 显示性能统计信息。
      * @param	x X轴显示位置。

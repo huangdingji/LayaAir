@@ -132,6 +132,10 @@ export class Resource extends EventDispatcher {
         return this._gpuMemory;
     }
 
+    static get ResourcesMap() {
+        return Resource._idResourcesMap;
+    }
+
     /**
      * 是否已销毁。
      */
@@ -248,5 +252,9 @@ export class Resource extends EventDispatcher {
                 console.debug(`destroy ${Object.getPrototypeOf(this).constructor.name} ${this.url}`);
             ILaya.loader.clearRes(this.url, this);
         }
+    }
+
+    static ResetDisposingCounter() {
+        _disposingCounter = 0;
     }
 }

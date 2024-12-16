@@ -794,7 +794,8 @@ export class Sprite extends Node {
     /**@internal */
     _setPivotY(value: number): void {
         var style: SpriteStyle = this.getStyle();
-        style.pivotY = value;
+        if (style)
+            style.pivotY = value;
     }
 
     /**@internal */

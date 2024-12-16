@@ -384,8 +384,8 @@ export class RenderSprite {
         left = tRec.x;
         top = tRec.y;
 
-        if (tCacheType === 'bitmap' && (w > 2048 || h > 2048)) {
-            console.warn("cache bitmap size larger than 2048, cache ignored");
+        if (tCacheType === 'bitmap' && (w > 3072 || h > 3072)) {
+            console.warn("cache bitmap size larger than 3072, cache ignored");
             _cacheStyle.releaseContext();
             _next._fun.call(_next, sprite, context, x, y);
             return;

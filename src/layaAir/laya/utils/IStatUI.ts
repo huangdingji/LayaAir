@@ -1,3 +1,5 @@
+import type { Sprite } from "../display/Sprite";
+
 export type StatUnit = "M" | "K" | "int";//M计算会除以1024*1024，k会除以1024，int不做处理
 export type StatColor = "yellow" | "white" | "red";//颜色
 export type StatMode = "summit" | "average";//是否根据帧分配
@@ -41,5 +43,10 @@ export interface IStatUI {
      * 渲染接口
      */
     render(ctx: any, x: number, y: number): void;
+
+    /**
+     * 获取窗口节点
+     */
+    getSp(): Sprite
 }
 

@@ -269,6 +269,8 @@ export class SoundManager {
                     else {
                         SoundManager._musicChannel.resume();
                     }
+                } else {
+                    SoundManager.playMusic(SoundManager._bgMusic)
                 }
             }
         }

@@ -424,7 +424,8 @@ export class Scene3D extends Sprite implements ISubmit {
     _sceneUniformObj: UniformBufferObject;
     /** @internal */
     _key: SubmitKey = new SubmitKey();
-
+    /** @internal */
+    _isClear: boolean = false;
     /** @internal */
     _opaqueQueue: IRenderQueue = Laya3DRender.renderOBJCreate.createBaseRenderQueue(false);
     /** @internal */
@@ -689,6 +690,14 @@ export class Scene3D extends Sprite implements ISubmit {
      */
     get skyRenderer(): SkyRenderer {
         return this._skyRenderer;
+    }
+
+    get isClear(): boolean {
+        return this._isClear;
+    }
+
+    set isClear(value: boolean) {
+        this._isClear = value;
     }
 
     /**
@@ -1496,6 +1505,42 @@ export class Scene3D extends Sprite implements ISubmit {
         this._volumeManager.destroy();
         this._componentDriver.callDestroy();
 
+    }
+
+    clear() {
+        this.isClear = true;
+        this._sceneRenderManager.destroy();
+        this._sceneRenderManager = null;
+        this._physicsManager && this._physicsManager.destroy();
+        this._physicsManager = null;
+        this._volumeManager.destroy();
+        this._volumeManager = null;
+        this._UI3DManager.clear();
+        this._opaqueQueue.destroy();
+        this._opaqueQueue = null;
+        this._transparentQueue.destroy();
+        this._transparentQueue = null;
+        this._cullPass.cullList.clear();
+    }
+    reInit() {
+        if (!this.isClear) {
+            return;
+        }
+        this.isClear = false;
+        if (Config3D.useBVHCull) {
+            let bvhConfig = new BVHSpatialConfig();
+            bvhConfig.Min_BVH_Build_Nums = Config3D.BVH_Min_Build_nums;
+            bvhConfig.limit_size = Config3D.BVH_limit_size;
+            bvhConfig.max_SpatialCount = Config3D.BVH_max_SpatialCount;
+            this._sceneRenderManager = new BVHSceneRenderManager(bvhConfig);
+        }
+        else {
+            this._sceneRenderManager = new SceneRenderManager();
+        }
+        this._physicsManager = Laya3D.PhysicsCreateUtil.createPhysicsManger(Scene3D.physicsSettings);
+        this._volumeManager = new VolumeManager();
+        this._opaqueQueue = Laya3DRender.renderOBJCreate.createBaseRenderQueue(false);
+        this._transparentQueue = Laya3DRender.renderOBJCreate.createBaseRenderQueue(true);
     }
 
     /**

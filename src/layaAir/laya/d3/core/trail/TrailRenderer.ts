@@ -209,5 +209,8 @@ export class TrailRenderer extends BaseRender {
         render.alignment = this.alignment;
     }
 
+    getTrailFilter(): TrailFilter {
+        return this._trailFilter
+    }
 }
 

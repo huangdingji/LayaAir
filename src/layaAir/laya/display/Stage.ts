@@ -170,6 +170,9 @@ export class Stage extends Sprite {
     /**使用物理分辨率作为canvas大小，会改进渲染效果，但是会降低性能*/
     useRetinalCanvas: boolean = false;
 
+    /**脚本报错函数回调 */
+    ScriptErrorFunc: Function
+
     /**场景类，引擎中只有一个stage实例，此实例可以通过Laya.stage访问。*/
     constructor() {
         super();

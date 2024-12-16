@@ -274,6 +274,7 @@ export class BaseTexture extends Resource {
     }
 
     protected _disposeResource(): void {
-        this._texture.dispose();
+        if (this._texture)
+            this._texture.dispose();
     }
 }

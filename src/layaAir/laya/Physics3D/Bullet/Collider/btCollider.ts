@@ -196,6 +196,9 @@ export class btCollider implements ICollider {
     }
 
     setColliderShape(shape: btColliderShape) {
+        if (!shape) {
+            return;
+        }
         shape._btCollider = this;
         if (shape == this._btColliderShape || shape._btShape == null)
             return;
@@ -370,7 +373,7 @@ export class btCollider implements ICollider {
 
     transformChanged(flag: number): void {
         this._transformFlag = flag;
-        if (this.inPhysicUpdateListIndex == -1 && !this._enableProcessCollisions) {
+        if (this._physicsManager && this._physicsManager._physicsUpdateList && this.inPhysicUpdateListIndex == -1 && !this._enableProcessCollisions) {
             this._physicsManager._physicsUpdateList.add(this);
         }
     }

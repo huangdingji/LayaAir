@@ -1,3 +1,4 @@
+import { Laya } from "../../Laya";
 import { Component } from "./Component";
 
 export class ComponentDriver {
@@ -171,6 +172,8 @@ export class ComponentDriver {
      * @param err 错误
      */
     onError(err: any) {
-        console.error(err);
+        if (Laya.stage.ScriptErrorFunc) {
+            Laya.stage.ScriptErrorFunc(err)
+        }
     }
 }

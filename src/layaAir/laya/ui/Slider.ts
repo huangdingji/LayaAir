@@ -207,6 +207,9 @@ export class Slider extends UIComponent {
      * @private
      */
     private mouseMove(e: Event): void {
+        if (this.destroyed) {
+            return;
+        }
         let stage = ILaya.stage;
         var oldValue: number = this._value;
         if (this.isVertical) {

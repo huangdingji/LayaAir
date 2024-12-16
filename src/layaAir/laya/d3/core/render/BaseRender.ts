@@ -423,6 +423,9 @@ export class BaseRender extends Component implements IBoundsCell {
     }
 
     set receiveShadow(value: boolean) {
+        if (Stat.CloseReceiveShadow) {
+            value = false
+        }
         if (this.renderNode.receiveShadow !== value) {
             this.renderNode.receiveShadow = value;
             this._receiveShadow = value;
@@ -448,6 +451,9 @@ export class BaseRender extends Component implements IBoundsCell {
     }
 
     set castShadow(value: boolean) {
+        if (Stat.CloseCastShadow) {
+            value = false
+        }
         this.renderNode.castShadow = value;
     }
 

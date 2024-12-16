@@ -218,6 +218,8 @@ export class btPhysicsManager implements IPhysicsManager {
     protected _currentFrameCollisions: Collision[] = [];
     /** @internal */
     protected _collisionsUtils = new CollisionTool();
+    /** @internal */
+    protected noUpdate: boolean; // 是否关闭物理（true 为关闭）
 
     //Joint
     /** @internal */
@@ -233,6 +235,7 @@ export class btPhysicsManager implements IPhysicsManager {
 
     constructor(physicsSettings: PhysicsSettings) {
         let bt = this._bt = btPhysicsCreateUtil._bt;
+        this.noUpdate = true;
         //Physcics World create
         this.maxSubSteps = physicsSettings.maxSubSteps;
         this.fixedTimeStep = physicsSettings.fixedTimeStep;
@@ -631,7 +634,13 @@ export class btPhysicsManager implements IPhysicsManager {
         delete this._currentConstraint[joint._id];
     }
 
+    closeUpdate(noUpdate: boolean) {
+        if (this.noUpdate === noUpdate) return
+        this.noUpdate = noUpdate
+    }
+
     update(elapsedTime: number): void {
+        if (this.noUpdate) return;
         this._updatePhysicsTransformFromRender();
         btCollider._addUpdateList = false;//物理模拟器会触发_updateTransformComponent函数,不加入更新队列
         //simulate physics

@@ -192,6 +192,10 @@ export class StatUI implements IStatUI {
     render(ctx: any, x: number, y: number) {
         this._show && this._sp && this._sp.render(ctx, 0, 0);
     }
+
+    getSp(): Sprite {
+        return this._sp
+    }
 }
 
 const fontSize: number = 16;

@@ -143,10 +143,13 @@ export class EventDispatcher {
      * 移除caller为target的所有事件监听
      * @param	caller caller对象
      */
-    offAllCaller(caller: any): EventDispatcher {
+    offAllCaller(caller: any, type?: string): EventDispatcher {
         if (caller && this._events) {
-            for (let type in this._events)
-                this._events[type].clearForTarget(caller);
+            for (let tmpType in this._events) {
+                if (type && tmpType != type)
+                    continue;
+                this._events[tmpType].clearForTarget(caller);
+            }
         }
         return this;
     }

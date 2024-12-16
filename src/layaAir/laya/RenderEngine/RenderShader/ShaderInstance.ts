@@ -368,6 +368,7 @@ ${uniformglsl}`;
 		this._uploadRender = null;
 		this._uploadCameraShaderValue = null;
 		this._uploadScene = null;
+		this._shaderPass = null;
 	}
 
 	/**

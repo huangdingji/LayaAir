@@ -53,4 +53,11 @@ export class UI3DManager {
     destory() {
         this._UI3Dlist.destroy();
     }
+
+    /**
+     * clear
+     */
+    clear() {
+        this._UI3Dlist.clear();
+    }
 }

@@ -1,4 +1,5 @@
 import { Laya } from "Laya";
+import { LaterHandler } from "laya/utils/CallLater";
 ///////////////////////////////////////////////////////////
 //  CallLaterTool.as
 //  Macromedia ActionScript Implementation of the Class CallLaterTool
@@ -64,15 +65,18 @@ import { Timer } from "laya/utils/Timer"
 		 * @param	method 定时器回调函数。
 		 * @param	args 回调参数。
 		 */
-		 callLater(caller:any, method:Function, args:any[] = null):void {
-			if (this._getHandler(caller, method) == null) {
-				CallLaterTool.oldCallLater.call(this,caller,method,args);
+		callLater(caller: any, method: Function, args: any[] = null): LaterHandler {
+			let laterHandler = this._getHandler(caller, method);
+			if (laterHandler == null) {
+				CallLaterTool.oldCallLater.call(this, caller, method, args);
+				laterHandler = this._laters[this._laters.length - 1];
 				if(CallLaterTool._isRecording)
 				{
-					CallLaterTool._recordedCallLaters.push(this._laters[this._laters.length-1]);
+					CallLaterTool._recordedCallLaters.push(laterHandler);
 				}
 				
 			}
+			return laterHandler
 		}
 	}
 

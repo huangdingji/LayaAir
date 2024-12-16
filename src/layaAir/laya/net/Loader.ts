@@ -48,6 +48,8 @@ export interface ILoadOptions {
     propertyParams?: TexturePropertyParams;
     blob?: ArrayBuffer;
     initiator?: ILoadTask;
+    isManual?: boolean;
+    isPreload?: boolean;
     [key: string]: any;
 }
 
@@ -118,6 +120,10 @@ export class Loader extends EventDispatcher {
     static TERRAINRES = "TERRAIN";
     /** Spine 资源 */
     static SPINE = "SPINE";
+     /**是否开启debug模式 */
+     static DEBUG: boolean = false;
+     /**下载最大优先级 */
+     static MAX_PRIORITY: number = 10;
 
     /** 加载出错后的重试次数，默认重试一次*/
     retryNum: number = 1;
@@ -125,6 +131,10 @@ export class Loader extends EventDispatcher {
     retryDelay: number = 0;
     /** 最大下载线程，默认为5个*/
     maxLoader: number = 5;
+    /** 预留给逻辑下载线程，默认为3个 */
+    reservedLoader: number = 3;
+    /** 预加载的资源大小超过多少才进行预加载，默认为512KB*/
+    preLoaderThreshold: number = 512 * 1024;
 
     static readonly extMap: { [ext: string]: Array<TypeMapEntry> } = {};
     static readonly typeMap: { [type: string]: TypeMapEntry } = {};
@@ -391,7 +401,7 @@ export class Loader extends EventDispatcher {
         options = Object.assign(task.options, options);
         delete options.type;
         if (options.priority == null)
-            options.priority = 0;
+            options.priority = Loader.MAX_PRIORITY;
         if (options.useWorkerLoader == null)
             options.useWorkerLoader = WorkerLoader.enable;
         if (onProgress)
@@ -457,6 +467,8 @@ export class Loader extends EventDispatcher {
             retryCnt: 0,
             onProgress: onProgress,
             onComplete: null,
+            isManual: options.isManual,
+            isPreload: options.isPreload,
         };
         if (options.useWorkerLoader) {
             task.useWorkerLoader = true;
@@ -482,9 +494,17 @@ export class Loader extends EventDispatcher {
     }
 
     private queueToDownload(item: DownloadItem) {
-        if (this._downloadings.size < this.maxLoader) {
-            this.download(item);
-            return;
+        // 要预留2个给系统下载，防止下载阻塞
+        if (item.isManual) {
+            if (this._downloadings.size < Math.max(0, this.maxLoader - this.reservedLoader)) {
+                this.download(item);
+                return;
+            }
+        } else {
+            if (this._downloadings.size < this.maxLoader) {
+                this.download(item);
+                return;
+            }
         }
 
         let priority = item.priority;
@@ -503,7 +523,12 @@ export class Loader extends EventDispatcher {
         this._downloadings.add(item);
         let url = URL.postFormatURL(item.url);
 
+        if (Loader.DEBUG) {
+            console.log(`download ${JSON.stringify(item)},${url}`);
+        }
+
         if (item.contentType == "image") {
+            item.isPreload = false;
             let preloadedContent = Loader.preLoadedMap[item.url];
             if (preloadedContent) {
                 if (!(preloadedContent instanceof ArrayBuffer)) {
@@ -539,8 +564,12 @@ export class Loader extends EventDispatcher {
                 this.completeItem(item, data, error));
         }
         else {
+            if (item.url.endsWith(".mp3")) {
+                item.isPreload = false;
+            }
             let preloadedContent = Loader.preLoadedMap[item.url];
             if (preloadedContent) {
+                item.isPreload = true;
                 this.completeItem(item, preloadedContent);
                 return;
             }
@@ -553,13 +582,33 @@ export class Loader extends EventDispatcher {
     private completeItem(item: DownloadItem, content: any, error?: string) {
         this._downloadings.delete(item);
         if (content) {
-            if (this._downloadings.size < this.maxLoader && this._queue.length > 0)
-                this.download(this._queue.shift());
-
+            if (this._queue.length > 0) {
+                let nextItem = this._queue[0];
+                if (nextItem.isManual) {
+                    if (this._downloadings.size < Math.max(0, this.maxLoader - this.reservedLoader)) 
+                        this.download(this._queue.shift());
+                } else {
+                    if (this._downloadings.size < this.maxLoader)
+                        this.download(this._queue.shift());
+                }
+            }
+    
             if (item.onProgress)
                 item.onProgress(1);
 
-            item.onComplete(content);
+            if (item.isPreload) {
+                if (content instanceof ArrayBuffer) {
+                    if (content.byteLength <= this.preLoaderThreshold) {
+                        Loader.preLoadedMap[item.url] = content;
+                    }
+                    item.onComplete(content);
+                } else {
+                    Loader.preLoadedMap[item.url] = content;
+                    item.onComplete(JSON.parse(JSON.stringify(content)));
+                }
+            } else {
+                item.onComplete(content);
+            }
         }
         else if (item.retryCnt != -1 && item.retryCnt < this.retryNum) {
             item.retryCnt++;
@@ -572,8 +621,16 @@ export class Loader extends EventDispatcher {
             if (item.onProgress)
                 item.onProgress(1);
 
-            if (this._downloadings.size < this.maxLoader && this._queue.length > 0)
-                this.download(this._queue.shift());
+            if (this._queue.length > 0) {
+                let nextItem = this._queue[0];
+                if (nextItem.isManual) {
+                    if (this._downloadings.size < Math.max(0, this.maxLoader - this.reservedLoader)) 
+                        this.download(this._queue.shift());
+                } else {
+                    if (this._downloadings.size < this.maxLoader)
+                        this.download(this._queue.shift());
+                }
+            }
 
             item.onComplete(null);
         }
@@ -1099,7 +1156,9 @@ class LoadTask implements ILoadTask {
 }
 
 const loadTaskPool: Array<LoadTask> = [];
-const dummyOptions: ILoadOptions = {};
+const dummyOptions: ILoadOptions = {
+    priority: Loader.MAX_PRIORITY
+};
 
 interface DownloadItem {
     url: string;
@@ -1111,6 +1170,8 @@ interface DownloadItem {
     blob?: ArrayBuffer;
     retryCnt?: number;
     silent?: boolean;
+    isManual?: boolean;
+    isPreload?: boolean;
     onComplete: (content: any) => void;
     onProgress: ProgressCallback;
 }
