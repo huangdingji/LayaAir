@@ -410,4 +410,7 @@ export class pxPhysicsManager implements IPhysicsManager {
         //TODO
     }
 
+    closeUpdate(noUpdate: boolean) {
+        // TODO
+    }
 }

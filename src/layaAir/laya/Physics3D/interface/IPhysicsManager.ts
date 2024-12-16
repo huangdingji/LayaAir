@@ -95,4 +95,5 @@ export interface IPhysicsManager {
    */
   shapeCastAll(shape: IColliderShape, fromPosition: Vector3, toPosition: Vector3, out: HitResult[], fromRotation?: Quaternion, toRotation?: Quaternion, collisonGroup?: number, collisionMask?: number, allowedCcdPenetration?: number): boolean;
 
+  closeUpdate(noUpdate: boolean): void;
 }
