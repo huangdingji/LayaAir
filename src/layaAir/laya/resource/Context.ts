@@ -2562,10 +2562,10 @@ export class Context {
             top = bottom = 0;
         }
 
-        var d_top: number = top / h;
-        var d_left: number = left / w;
-        var d_right: number = right / w;
-        var d_bottom: number = bottom / h;
+        var d_top: number = top / (h / tex.scaleRate);
+        var d_left: number = left / (w / tex.scaleRate);
+        var d_right: number = right / (w / tex.scaleRate);
+        var d_bottom: number = bottom / (h / tex.scaleRate);
 
         //处理进度条不好看的问题
         // if (left + right > width) {
