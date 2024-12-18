@@ -1139,6 +1139,11 @@ export class Scene3D extends Sprite implements ISubmit {
         this._cullInfoCamera = camera;
     }
 
+    private _mainCamera: Camera
+    get mainCamera(): Camera {
+        return this._mainCamera;
+    }
+
     /**
      * 重新计算CullCamera
      */
@@ -1162,6 +1167,9 @@ export class Scene3D extends Sprite implements ISubmit {
         while (index < count && this._cameraPool[index]._renderingOrder <= order)
             index++;
         this._cameraPool.splice(index, 0, camera);
+        if (!this._mainCamera) {
+            this._mainCamera = camera as Camera;
+        }
     }
 
     /**

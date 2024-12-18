@@ -343,6 +343,9 @@ export class UI3D extends BaseRender {
      * 更新Sprite的RT
      */
     _submitRT() {
+        if (!this._scene || !this._scene.mainCamera || !this._needRender(this._scene.mainCamera.boundFrustum, null)) {
+            return
+        }
         //判断是否需要重置
         this._rendertexure2D && this._shellSprite.drawToTexture(this._rendertexure2D.width, this._rendertexure2D.height, 0, 0, this._rendertexure2D);
         this._setMaterialTexture();

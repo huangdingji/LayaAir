@@ -14,6 +14,7 @@ import { HideFlags } from "../Const";
 import { HierarchyParser } from "../loaders/HierarchyParser";
 import { UIComponent } from "./UIComponent";
 import { ScrollType } from "./Styles";
+import { LayaEnv } from "../../LayaEnv";
 
 /**
  * 当对象的 <code>selectedIndex</code> 属性发生变化时调度。
@@ -188,6 +189,8 @@ export class List extends Box {
     /**@private */
     protected _itemRender: any;
     /**@private */
+    protected _templateItemRender: any
+    /**@private */
     protected _repeatX: number = 0;
     /**@private */
     protected _repeatY: number = 0;
@@ -245,6 +248,7 @@ export class List extends Box {
         this._content = null;
         this._scrollBar = null;
         this._itemRender = null;
+        this._templateItemRender = null;
         this._cells = null;
         this._array = null;
         this.selectHandler = this.renderHandler = this.mouseHandler = null;
@@ -425,11 +429,24 @@ export class List extends Box {
      * </ol></p>
      * @implements
      */
-    get itemRender(): any {
-        return this._itemRender;
+    get itemTemplateRender(): any {
+        return this._templateItemRender;
     }
 
+    /**
+     * 引擎解析赋值
+     */
     set itemRender(value: any) {
+        this._templateItemRender = value;
+        if (!LayaEnv.isPlaying) {
+            this.realItemRender = value;
+        }
+    }
+
+    /**
+     * 代码更新赋值
+     */
+    set realItemRender(value: any) {
         if (this._itemRender != value) {
             this._itemRender = value;
             //销毁老单元格
@@ -439,6 +456,10 @@ export class List extends Box {
             this._cells!.length = 0;
             this._setCellChanged();
         }
+    }
+
+    get itemRender(): any {
+        return this._itemRender;
     }
 
     /**
