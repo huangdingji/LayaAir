@@ -111,6 +111,7 @@ export class AnimationBase extends Sprite {
             return;
         }
         if (this._isReverse) {
+            this._index = isNaN(this._index) ? this.count : this._index;
             this._index--;
             if (this._index < 0) {
                 if (this.loop) {
