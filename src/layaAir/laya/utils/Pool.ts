@@ -25,6 +25,7 @@ export class Pool {
      */
     static clearBySign(sign: string): void {
         if (Pool._poolDic[sign]) Pool._poolDic[sign].length = 0;
+        delete Pool._poolDic[sign];
     }
 
     /**
