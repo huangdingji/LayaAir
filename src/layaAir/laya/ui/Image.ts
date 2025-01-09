@@ -174,6 +174,9 @@ export class Image extends UIComponent {
                         } else {
                             this.source = tex;
                         }
+                        if (!tex) {
+                            console.log("skin not found:", url, this.name);
+                        }
                     } 
                 });
             }
