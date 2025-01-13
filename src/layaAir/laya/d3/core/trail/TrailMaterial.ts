@@ -129,7 +129,7 @@ export class TrailMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE;
 				this.alphaTest = false;
-				this._shaderValues.addDefine(TrailMaterial.SHADERDEFINE_ADDTIVEFOG);
+				// this._shaderValues.addDefine(TrailMaterial.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			case TrailMaterial.RENDERMODE_ALPHABLENDED:
 				this.renderQueue = Material.RENDERQUEUE_TRANSPARENT;
@@ -139,7 +139,7 @@ export class TrailMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE_MINUS_SRC_ALPHA;
 				this.alphaTest = false;
-				this._shaderValues.removeDefine(TrailMaterial.SHADERDEFINE_ADDTIVEFOG);
+				// this._shaderValues.removeDefine(TrailMaterial.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			default:
 				throw new Error("ShurikenParticleMaterial : renderMode value error.");

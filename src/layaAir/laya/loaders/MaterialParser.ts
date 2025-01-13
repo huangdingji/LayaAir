@@ -43,6 +43,9 @@ export class MaterialParser {
                 case "defines":
                     let defineNames: any[] = props[key];
                     for (let i = 0, n = defineNames.length; i < n; i++) {
+                        if (defineNames[i] === "ADDTIVEFOG" || (props.type === "EffectParticle" && defineNames[i] === "DIFFUSEMAP")) {
+                            continue;
+                        }
                         let define: ShaderDefine = Shader3D.getDefineByName(defineNames[i]);//TODO:是否取消defines
                         mat._shaderValues.addDefine(define);
                     }

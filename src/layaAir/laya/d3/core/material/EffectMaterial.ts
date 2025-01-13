@@ -108,7 +108,7 @@ export class EffectMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE;
 				this.depthTest = RenderState.DEPTHTEST_LEQUAL;
-				this.addDefine(Material.SHADERDEFINE_ADDTIVEFOG);
+				// this.addDefine(Material.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			case EffectMaterial.RENDERMODE_ALPHABLENDED:
 				this.renderQueue = Material.RENDERQUEUE_TRANSPARENT;
@@ -119,7 +119,7 @@ export class EffectMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE_MINUS_SRC_ALPHA;
 				this.depthTest = RenderState.DEPTHTEST_LEQUAL;
-				this.removeDefine(Material.SHADERDEFINE_ADDTIVEFOG);
+				// this.removeDefine(Material.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			default:
 				throw new Error("MeshEffectMaterial : renderMode value error.");

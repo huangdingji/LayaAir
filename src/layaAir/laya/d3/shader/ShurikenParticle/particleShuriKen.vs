@@ -592,7 +592,7 @@ void main()
 	    gl_Position = u_Projection * u_View * vec4(center, 1.0);
 		vec4 startcolor = gammaToLinear(a_StartColor);
 	    v_Color = computeParticleColor(startcolor, normalizedAge);
-#ifdef DIFFUSEMAP
+// #ifdef DIFFUSEMAP
 	    vec2 simulateUV;
     #if defined(SPHERHBILLBOARD) || defined(STRETCHEDBILLBOARD) || defined(HORIZONTALBILLBOARD) || defined(VERTICALBILLBOARD)
 	    simulateUV = a_SimulationUV.xy + a_CornerTextureCoordinate.zw * a_SimulationUV.zw;
@@ -603,7 +603,7 @@ void main()
 	    v_TextureCoordinate = computeParticleUV(simulateUV, normalizedAge);
     #endif
 	    v_TextureCoordinate = TransformUV(v_TextureCoordinate, u_TilingOffset);
-#endif
+// #endif
 	}
     else
 	{

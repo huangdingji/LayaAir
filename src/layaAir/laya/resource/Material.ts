@@ -55,7 +55,7 @@ export class Material extends Resource implements IClone {
     /**材质级着色器宏定义,透明测试。*/
     static SHADERDEFINE_ALPHATEST: ShaderDefine;
     static SHADERDEFINE_MAINTEXTURE: ShaderDefine;
-    static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
+    // static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
     /**
      * 加载材质。
      * @param url 材质地址。
@@ -71,7 +71,7 @@ export class Material extends Resource implements IClone {
     static __initDefine__(): void {
         Material.SHADERDEFINE_ALPHATEST = Shader3D.getDefineByName("ALPHATEST");
         Material.SHADERDEFINE_MAINTEXTURE = Shader3D.getDefineByName("MAINTEXTURE");
-        Material.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
+        // Material.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
         Material.ALPHATESTVALUE = Shader3D.propertyNameToID("u_AlphaTestValue");
         Shader3D.CULL = Shader3D.propertyNameToID("s_Cull");
         Shader3D.BLEND = Shader3D.propertyNameToID("s_Blend");
@@ -420,7 +420,7 @@ export class Material extends Resource implements IClone {
                 this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
                 this.blendDst = RenderState.BLENDPARAM_ONE;
                 this.depthTest = RenderState.DEPTHTEST_LESS;
-                this._shaderValues.addDefine(Material.SHADERDEFINE_ADDTIVEFOG);
+                // this._shaderValues.addDefine(Material.SHADERDEFINE_ADDTIVEFOG);
                 break;
             case MaterialRenderMode.RENDERMODE_ALPHABLENDED:
                 this.renderQueue = Material.RENDERQUEUE_TRANSPARENT;
@@ -431,7 +431,7 @@ export class Material extends Resource implements IClone {
                 this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
                 this.blendDst = RenderState.BLENDPARAM_ONE_MINUS_SRC_ALPHA;
                 this.depthTest = RenderState.DEPTHTEST_LESS;
-                this._shaderValues.removeDefine(Material.SHADERDEFINE_ADDTIVEFOG);
+                // this._shaderValues.removeDefine(Material.SHADERDEFINE_ADDTIVEFOG);
                 break;
             case MaterialRenderMode.RENDERMODE_CUSTOME:
                 //TODO IDE

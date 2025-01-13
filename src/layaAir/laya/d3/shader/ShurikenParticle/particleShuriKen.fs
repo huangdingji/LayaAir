@@ -24,7 +24,7 @@ void main()
     color = vec4(1.0);
 #endif
 
-#ifdef DIFFUSEMAP
+// #ifdef DIFFUSEMAP
     vec4 colorT = texture2D(u_texture, v_TextureCoordinate);
     #ifdef Gamma_u_texture
     colorT = gammaToLinear(colorT);
@@ -34,13 +34,13 @@ void main()
     #else
     color *= colorT * v_Color;
     #endif // TINTCOLORd
-#else
-    #ifdef TINTCOLOR
-    color *= u_Tintcolor * c_ColorSpace * v_Color;
-    #else
-    color *= v_Color;
-    #endif // TINTCOLOR
-#endif
+// #else
+//     #ifdef TINTCOLOR
+//     color *= u_Tintcolor * c_ColorSpace * v_Color;
+//     #else
+//     color *= v_Color;
+//     #endif // TINTCOLOR
+// #endif
 
 #ifdef ALPHATEST
     if (color.a < u_AlphaTestValue)

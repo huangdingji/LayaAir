@@ -17,11 +17,11 @@ export class ShurikenParticleMaterial extends Material {
 	static RENDERMODE_ADDTIVE: number = 1;
 
 	/**@internal */
-	static SHADERDEFINE_DIFFUSEMAP: ShaderDefine;
+	// static SHADERDEFINE_DIFFUSEMAP: ShaderDefine;
 	/**@internal */
 	static SHADERDEFINE_TINTCOLOR: ShaderDefine;
 	/**@interanl */
-	static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
+	// static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
 
 	/**@internal */
 	static DIFFUSETEXTURE: number;
@@ -37,9 +37,9 @@ export class ShurikenParticleMaterial extends Material {
 	 * @internal
 	 */
 	static __initDefine__(): void {
-		ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP = Shader3D.getDefineByName("DIFFUSEMAP");
+		// ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP = Shader3D.getDefineByName("DIFFUSEMAP");
 		ShurikenParticleMaterial.SHADERDEFINE_TINTCOLOR = Shader3D.getDefineByName("TINTCOLOR");
-		ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
+		// ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
 		ShurikenParticleMaterial.DIFFUSETEXTURE = Shader3D.propertyNameToID("u_texture");
 		ShurikenParticleMaterial.TINTCOLOR = Shader3D.propertyNameToID("u_Tintcolor");
 		ShurikenParticleMaterial.TILINGOFFSET = Shader3D.propertyNameToID("u_TilingOffset");
@@ -87,10 +87,10 @@ export class ShurikenParticleMaterial extends Material {
 	}
 
 	set texture(value: BaseTexture) {
-		if (value)
-			this._shaderValues.addDefine(ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP);
-		else
-			this._shaderValues.removeDefine(ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP);
+		// if (value)
+		// 	this._shaderValues.addDefine(ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP);
+		// else
+		// 	this._shaderValues.removeDefine(ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP);
 
 		this._shaderValues.setTexture(ShurikenParticleMaterial.DIFFUSETEXTURE, value);
 	}
@@ -134,7 +134,7 @@ export class ShurikenParticleMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE;
 				this.alphaTest = false;
-				this._shaderValues.addDefine(ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG);
+				// this._shaderValues.addDefine(ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			case ShurikenParticleMaterial.RENDERMODE_ALPHABLENDED:
 				this.renderQueue = Material.RENDERQUEUE_TRANSPARENT;
@@ -144,7 +144,7 @@ export class ShurikenParticleMaterial extends Material {
 				this.blendSrc = RenderState.BLENDPARAM_SRC_ALPHA;
 				this.blendDst = RenderState.BLENDPARAM_ONE_MINUS_SRC_ALPHA;
 				this.alphaTest = false;
-				this._shaderValues.removeDefine(ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG);
+				// this._shaderValues.removeDefine(ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG);
 				break;
 			default:
 				throw new Error("ShurikenParticleMaterial : renderMode value error.");
