@@ -13,7 +13,6 @@ import { UniformBufferObject } from "../../UniformBufferObject";
 import { GLObject } from "./GLObject";
 import { WebGLEngine } from "./WebGLEngine";
 import { Matrix3x3 } from "../../../maths/Matrix3x3";
-import { Laya } from "../../../../Laya";
 
 
 export class GLShaderInstance extends GLObject implements IRenderShaderInstance {
@@ -58,13 +57,7 @@ export class GLShaderInstance extends GLObject implements IRenderShaderInstance 
         const gl: WebGLRenderingContext = this._gl;
         this._program = gl.createProgram();
         this._vshader = this._createShader(gl, this._vs, gl.VERTEX_SHADER);
-        if (!this._vshader) {
-            return;
-        }
         this._pshader = this._createShader(gl, this._ps, gl.FRAGMENT_SHADER);
-        if (!this._pshader) {
-            return;
-        }
         gl.attachShader(this._program, this._vshader);
         gl.attachShader(this._program, this._pshader);
 
@@ -136,12 +129,6 @@ export class GLShaderInstance extends GLObject implements IRenderShaderInstance 
     */
     private _createShader(gl: WebGLRenderingContext, str: string, type: number): any {
         var shader: WebGLShader = gl.createShader(type);
-        if (!(shader instanceof WebGLShader)) {
-             if (Laya.stage.ScriptErrorFunc) {
-                Laya.stage.ScriptErrorFunc("_createShader error")
-            }
-            return null;
-        }
         gl.shaderSource(shader, str);
         gl.compileShader(shader);
         if (this._engine._isShaderDebugMode && !gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
