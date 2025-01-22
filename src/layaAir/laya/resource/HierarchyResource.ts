@@ -1,4 +1,6 @@
 import { LayaEnv } from "../../LayaEnv";
+import { AnimationClip } from "../d3/animation/AnimationClip";
+import { AnimatorController } from "../d3/component/Animator/AnimatorController";
 import { Node } from "../display/Node";
 import { Scene } from "../display/Scene";
 import { LegacyUIParser } from "../loaders/LegacyUIParser";
@@ -36,7 +38,19 @@ export class Prefab extends Resource {
         if (res instanceof Resource) {
             res._addReference();
             this._deps.push(res);
-
+            if (res instanceof AnimatorController) {
+                if (res.data && res.data.controllerLayers) {
+                    for (let i = 0; i < res.data.controllerLayers.length; i++) {
+                        let layer = res.data.controllerLayers[i];
+                        for (let j = 0; j < layer.states.length; j++) {
+                            let state = layer.states[j];
+                            if (state.clip && state.clip instanceof AnimationClip) {
+                                state.clip._addReference()
+                            }
+                        }
+                    }
+                }
+            }
             if (!LayaEnv.isPlaying && (res instanceof Prefab))
                 res.on("obsolute", this, this.onDepObsolute);
         }
@@ -45,6 +59,19 @@ export class Prefab extends Resource {
     addDeps(resArr: Array<Resource>) {
         for (let res of resArr) {
             if (res instanceof Resource) {
+                if (res instanceof AnimatorController) {
+                    if (res.data && res.data.controllerLayers) {
+                        for (let i = 0; i < res.data.controllerLayers.length; i++) {
+                            let layer = res.data.controllerLayers[i];
+                            for (let j = 0; j < layer.states.length; j++) {
+                                let state = layer.states[j];
+                                if (state.clip && state.clip instanceof AnimationClip) {
+                                    state.clip._addReference()
+                                }
+                            }
+                        }
+                    }
+                }
                 res._addReference();
                 this._deps.push(res);
 
@@ -56,6 +83,19 @@ export class Prefab extends Resource {
 
     protected _disposeResource(): void {
         for (let res of this._deps) {
+            if (res instanceof AnimatorController) {
+                if (res.data && res.data.controllerLayers) {
+                    for (let i = 0; i < res.data.controllerLayers.length; i++) {
+                        let layer = res.data.controllerLayers[i];
+                        for (let j = 0; j < layer.states.length; j++) {
+                            let state = layer.states[j];
+                            if (state.clip && state.clip instanceof AnimationClip) {
+                                state.clip._removeReference()
+                            }
+                        }
+                    }
+                }
+            }
             res._removeReference();
 
             if (!LayaEnv.isPlaying && (res instanceof Prefab))
