@@ -27,6 +27,7 @@ import { Vector3 } from "../../../maths/Vector3";
 import { Vector4 } from "../../../maths/Vector4";
 import { AnimatorUpdateMode } from "../../../components/AnimatorUpdateMode";
 import { AnimatorStateCondition } from "../../../components/AnimatorStateCondition";
+import { Timer } from "../../../utils/Timer";
 
 export type AnimatorParams = { [key: number]: number | boolean };
 
@@ -1379,7 +1380,7 @@ export class Animator extends Component {
                 case 0:
                     var animatorState: AnimatorState = playStateInfo.currentState!;
                     var clip: AnimationClip = animatorState._clip!;
-                    var speed: number = this._speed * animatorState.speed;
+                    var speed: number = this._speed * animatorState.speed * Timer.globalAniSpeed;
                     var finish: boolean = playStateInfo._finish;//提前取出finish,防止最后一帧跳过
                     finish || this._updatePlayer(animatorState, playStateInfo, delta * speed, animatorState.islooping, i);
                     if (needRender) {
@@ -1399,7 +1400,7 @@ export class Animator extends Component {
                     var startPlayTime: number = crossPlayStateInfo._startPlayTime;
                     var crossClipDuration: number = crossClip._duration - startPlayTime;
                     var crossScale: number = (crossDuratuion > crossClipDuration && 0 != crossClipDuration) ? crossClipDuration / crossDuratuion : 1.0;//如果过度时间大于过度动作时间,则减慢速度
-                    var crossSpeed: number = this._speed * crossState.speed;
+                    var crossSpeed: number = this._speed * crossState.speed * Timer.globalAniSpeed;
                     this._updatePlayer(crossState, crossPlayStateInfo, delta * crossScale * crossSpeed, crossClip.islooping, i);
                     var crossWeight: number = ((crossPlayStateInfo._elapsedTime - startPlayTime) / crossScale) / crossDuratuion;
                     var needUpdateFinishcurrentState = false;
@@ -1414,7 +1415,7 @@ export class Animator extends Component {
                         }
                     } else {
                         if (!playStateInfo._finish) {
-                            speed = this._speed * animatorState.speed;
+                            speed = this._speed * animatorState.speed * Timer.globalAniSpeed;
                             needUpdateFinishcurrentState = true;
                             this._updatePlayer(animatorState, playStateInfo, delta * speed, animatorState.islooping, i);
                             if (needRender)
@@ -1439,7 +1440,7 @@ export class Animator extends Component {
                     startPlayTime = crossPlayStateInfo._startPlayTime;
                     crossClipDuration = crossClip._duration - startPlayTime;
                     crossScale = crossDuratuion > crossClipDuration ? crossClipDuration / crossDuratuion : 1.0;//如果过度时间大于过度动作时间,则减慢速度
-                    crossSpeed = this._speed * crossState.speed;
+                    crossSpeed = this._speed * crossState.speed * Timer.globalAniSpeed;
                     this._updatePlayer(crossState, crossPlayStateInfo, delta * crossScale * crossSpeed, crossState.islooping, i);
                     if (needRender) {
                         crossWeight = ((crossPlayStateInfo._elapsedTime - startPlayTime) / crossScale) / crossDuratuion;

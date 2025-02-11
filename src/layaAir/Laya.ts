@@ -45,7 +45,7 @@ import { Material } from "./laya/resource/Material";
 export class Laya {
     /** 舞台对象的引用。*/
     static stage: Stage = null;
-
+    
     /**@private 系统时钟管理器，引擎内部使用*/
     static systemTimer: Timer = null;
     /**@private 组件的物理时钟管理器*/
@@ -77,7 +77,7 @@ export class Laya {
         if (Laya._inited)
             return Promise.resolve();
         Laya._inited = true;
-
+        Timer.globalAniSpeed = 1.0;
         if (!WebGL.enable())
             throw new Error("Must support webGL!");
 

@@ -52,6 +52,7 @@ import { VertexElement } from "../../../renders/VertexElement";
 import { BufferState } from "../../../webgl/utils/BufferState";
 import { VertexMesh } from "../../../RenderEngine/RenderShader/VertexMesh";
 import { Laya3DRender } from "../../RenderObjs/Laya3DRender";
+import { Timer } from "../../../utils/Timer";
 
 
 /**
@@ -1368,7 +1369,7 @@ export class ShurikenParticleSystem extends GeometryElement implements IClone {
     protected _updateParticles(elapsedTime: number): void {
         if (this._ownerRender.renderMode === 4 && !this._ownerRender.mesh)//renderMode=4且mesh为空时不更新
             return;
-
+        elapsedTime *= Timer.globalAniSpeed;
         this._currentTime += elapsedTime;//计算目前粒子播放时间啊
         this._retireActiveParticles();
         this._freeRetiredParticles();

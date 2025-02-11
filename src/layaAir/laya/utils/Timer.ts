@@ -33,6 +33,9 @@ export class Timer {
     /**@private */
     private _count: number = 0;
 
+    /** 全局动画速度（Animator 和 ShurikenParticleSystem），默认为1，即正常播放,值越大，播放速度越快*/
+    static globalAniSpeed: number;
+    
     /**
      * 创建 <code>Timer</code> 类的一个实例。
      */
